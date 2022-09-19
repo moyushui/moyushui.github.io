@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="先验知识二进制重写技术  VSA(Value set analysis)：值集分析 建立抽象内存模型，恢复程序中的变量并使用抽象地址表示，随后对每条指令进行静态分析得到抽象地址可能的值的集合。 代码优化： 机器无关 机器相关 局部（基本块内）全局（多个基本块） 公共子表达式：表达式在两次使用之间不存在被修改的可能 复制传播：在复制语句x&#x3D;y之后尽可能使用y来替换x——为死代码消除提供了可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/09/19/%E5%89%8D%E5%90%91%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%8ESSE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="先验知识二进制重写技术  VSA(Value set analysis)：值集分析 建立抽象内存模型，恢复程序中的变量并使用抽象地址表示，随后对每条指令进行静态分析得到抽象地址可能的值的集合。 代码优化： 机器无关 机器相关 局部（基本块内）全局（多个基本块） 公共子表达式：表达式在两次使用之间不存在被修改的可能 复制传播：在复制语句x&#x3D;y之后尽可能使用y来替换x——为死代码消除提供了可">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-07-11-40-07-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-08-11-56-39-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-15-56-41-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-15-56-31-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-16-21-47-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-16-32-30-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-16-39-15-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-16-58-42-image.png">
+<meta property="og:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-09-17-16-31-image.png">
+<meta property="article:published_time" content="2022-09-19T01:55:20.587Z">
+<meta property="article:modified_time" content="2022-09-18T02:59:41.983Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/dlwjc/AppData/Roaming/marktext/images/2022-09-07-11-40-07-image.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-前向数据流与SSE" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/09/19/%E5%89%8D%E5%90%91%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%8ESSE/" class="article-date">
+  <time class="dt-published" datetime="2022-09-19T01:55:20.587Z" itemprop="datePublished">2022-09-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="先验知识"><a href="#先验知识" class="headerlink" title="先验知识"></a>先验知识</h2><p>二进制重写技术 </p>
+<p>VSA(Value set analysis)：值集分析 建立抽象内存模型，恢复程序中的变量并使用抽象地址表示，随后对每条指令进行静态分析得到抽象地址可能的值的集合。</p>
+<p>代码优化： 机器无关 机器相关 局部（基本块内）全局（多个基本块）</p>
+<p>公共子表达式：表达式在两次使用之间不存在被修改的可能</p>
+<p>复制传播：在复制语句x&#x3D;y之后尽可能使用y来替换x——为死代码消除提供了可能</p>
+<p>死代码：计算结果永远不会被使用</p>
+<p>常量合并：一个表达式的值是常量，使用常量替换表达式</p>
+<p>代码移动：减少循环中的指令个数 处理不管循环多少次结果相同的表达式（循环不变计算——具有相对性 内层循环是循环不变计算，但对外层循环来说可能不是），将其移动到循环之外。</p>
+<p>强度削弱：用代价低的操作代替代价高的操作（快代替慢）</p>
+<p>·归纳变量：每次复制所变化的值为常量  删除归纳变量：循环中一组归纳变量步调一致，可以只保留一个</p>
+<p>基本块 DAG表示 </p>
+<p>定值变量表  可以识别公共子表达式 </p>
+<p>删除没有附加活跃变量的根节点可以删除无用代码</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-07-11-40-07-image.png"></p>
+<h2 id="数据流分析"><a href="#数据流分析" class="headerlink" title="数据流分析"></a>数据流分析</h2><p>前向数据流问题：</p>
+<p>$OUT(S_n) &#x3D; f(IN(S_n))$</p>
+<p>逆向数据流问题：</p>
+<p>$IN(S_n) &#x3D; f(OUT(S_n)$</p>
+<p>基本块的数据流与语句间数据流的关系：</p>
+<p>前向：$f_B &#x3D;f_{s_n} <em>f_{s_{n-1}}</em>…..*f_{s_1} $</p>
+<p>逆向：$f_B &#x3D; f_{s_1}<em>f_{s_2}</em>…..*f_{s_n}$</p>
+<p>数据流技术知识一种统称，其根据抽象数据的不同分为不同的技术，具体的细节也有一定的不同。</p>
+<p>可以分为：到达定值  活跃变量  可用表达式</p>
+<p>到达定值是一种前向数据流分析技术，交汇运算为并，其计算在某个程序点所有可用到达的定值的集合，domain为所有定值的集合的所有子集的集合。</p>
+<p>活跃变量是一种逆向数据流技术，交汇运算为并，计算在某个程序点活跃的变量（之后会使用的变量，因此使用逆向数据流技术）。</p>
+<p>可用表达式为一种前向数据流技术，交汇运算为交（只有在所有前继可用的表达式才一定会在本基本块可用，这是一种保守的解）</p>
+<p>数据流分析中的保守：不会精确得得到所有的解，但是同样也不会得到错误的解。</p>
+<h2 id="论文阅读"><a href="#论文阅读" class="headerlink" title="论文阅读"></a>论文阅读</h2><p>Finding Taint-Style Vulnerabilities in Linux-based Embedded Firmware with SSE-based Alias Analysis</p>
+<p>limitations:</p>
+<p>1、符号执行丢失别名信息——两个指针别名解引用到不同的地址</p>
+<p>2、VSA所求为近似值会导致误报</p>
+<p>3、间接调用的忽略</p>
+<p>需求驱动数据流 上下文与字段敏感的指针别名分析  间接调用解决方案  净化规则检查</p>
+<p>污点分析——key：实现高精度</p>
+<p>如果无法实现高精度：发现的路径中存在假链路、缺少链接导致漏洞路径没有被暴露</p>
+<p>在给定程序点，通过向前向后使用user-def与def-user来追踪路径中全部的别名信息。</p>
+<p>access path思想：使用如何从初始变量访问内存位置来表示内存位置。</p>
+<p>SSE structured symbolic expression 对变量的来源进行编码，包括算数操作与内存操作</p>
+<p>按需分析：可以从特定的程序点开始分析，只关注特殊变量 计算相关指令</p>
+<p>污点型漏洞：ICFG ——恢复间接调用边   在ICFG中发现路径——多级指针别名 过程间别名  污染传播分析</p>
+<p>使用基于存储的方法来表示运行时内存地址 angr：指针解引用出错  VSA：求得指针近似值——提供过近似范围 缺少约束效果更差</p>
+<p>一、中间代码提取</p>
+<p>使用ida扫描数据段中所有立即数，如果其指向代码段且指向的代码段的指令流与函数的签名（调用约定）相匹配，则被视为是一个函数指针，之后使用angr加载二进制 使用pyvex转换为vex ir并生成CFG，由于缺少间接调用，因此现在的CFG是不完整的。</p>
+<p>二、基于SSE的需求驱动别名分析</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-08-11-56-39-image.png"></p>
+<p>使用SSE查找指针别名：</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-15-56-41-image.png"></p>
+<h3 id="基本块内的指针别名："><a href="#基本块内的指针别名：" class="headerlink" title="基本块内的指针别名："></a>基本块内的指针别名：</h3><p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-15-56-31-image.png">$PRE_f$ ：来自所有前向基本块的前向别名集</p>
+<p>$SUC_b$ : 来自所有后继基本块的后向别名集</p>
+<p>1、首先<strong>手动</strong>获得当前基本块的目标指针(比如污染点)</p>
+<p>$IN_f$ 包含所有需要前向追踪的SSE</p>
+<p>$IN_b$ 包含所有需要后向追踪的SSE</p>
+<p>SSE更新与kill规则</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-16-21-47-image.png"></p>
+<p>2、FORWARDUPDATE</p>
+<p>前向更新 对于指定的指针v 如果其在右手侧 d&#x3D;v 比如 def-use中的use中，则使用d替换SSE中的v来生成新的SSE。如果遇到store(d)&#x3D;v，则需要逆向追踪d的定义。</p>
+<p>3、BACKWARDUPDATE</p>
+<p>对于v 左手侧 v&#x3D;u 则需要同时像前后追踪u  对于1-6规则的情况 d只能前向追踪，而对于store(d)&#x3D;v 同样需要同时前后追踪</p>
+<p>4、kill</p>
+<p>对寄存器于内存地址的更新，需要停止对相应的SSE的追踪</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-16-32-30-image.png"></p>
+<h3 id="过程内与过程间的别名分析"><a href="#过程内与过程间的别名分析" class="headerlink" title="过程内与过程间的别名分析"></a>过程内与过程间的别名分析</h3><p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-16-39-15-image.png"></p>
+<p>worklist：函数内所有基本块 按照逆拓扑序</p>
+<p><strong>调用指令被视为独立的基本块</strong></p>
+<p>TRANSFERFUNC：获得callee对指针的修改与引用</p>
+<p>函数入口点需要逆向追踪的返回到callsite 出口点需要前向追踪的返回到returnsite</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-16-58-42-image.png"></p>
+<h3 id="间接调用的恢复"><a href="#间接调用的恢复" class="headerlink" title="间接调用的恢复"></a>间接调用的恢复</h3><p>1、将带有寄存器的分支指令视为间接调用</p>
+<p>2、找到address-taken function  a.函数指针 b.函数指针表</p>
+<p>3、执行别名分析</p>
+<p><img src="C:\Users\dlwjc\AppData\Roaming\marktext\images\2022-09-09-17-16-31-image.png"></p>
+<p>4、开始匹配 对于函数指针的情况CTexpr就是Pexpr的别名，对于函数指针表 CTexpr会被表示为 load(dptr + i * stride)，读取其指向地址 i从0开始递增指导指针表的最大地址。如果返回的地址是有效的 则加入到间接调用的集合中。</p>
+<p>对于特定情况 利用函数指针表的数据结构一般为一个全局指针，通过查找全局指针的 别名与数据流关系进行解析。</p>
+<p>污点型漏洞检查</p>
+<p>“function summaries”</p>
+<p>将污染随SSE与相关约束传播</p>
+<p>对被分析的函数创建函数摘要——优化 cache</p>
+<p>但是，并非所有别名都应在别名分析后被污染。例如，当尚未调用recv时，recv中受污染的缓冲区指针不应向后传播。EmTaint根据我们所称的污染触发点确定新别名SSE是否应受到污染。污染触发点是一类调用站点，它满足被调用方的参数指针在被调用方执行后被污染的属性。EmTaint跟踪每个别名的污染触发点。在正向分析中，当别名在其tainttrigger点上传播时，该别名即被污染。相反，在反向分析中，当别名传播到其污染触发点时，该别名是未污染的。在汇点，我们只考虑受污染的SSE来检测受污染类型的漏洞。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/09/19/%E5%89%8D%E5%90%91%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%8ESSE/" data-id="cl884ar4d00018win26pu1s6b" data-title="" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/09/19/%E4%BD%8E%E7%BA%A7IR%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88%E5%88%86%E6%9E%90%E4%B8%8Eangr%E4%B8%AD%E7%9A%84Reaching%20definition/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/19/%E5%89%8D%E5%90%91%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%8ESSE/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/19/%E4%BD%8E%E7%BA%A7IR%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88%E5%88%86%E6%9E%90%E4%B8%8Eangr%E4%B8%AD%E7%9A%84Reaching%20definition/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/08/DTaint/">DTaint</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
